@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML\Graphics.hpp>
-#include<iostream>
 #include "Const.h"
 #include "Player.h"
 class Wall
@@ -16,7 +15,7 @@ public:
 	bool colisionBottom(sf::FloatRect rect);
 	bool colision_l(sf::FloatRect rect);
 	bool colision_r(sf::FloatRect rect);
-	void chColision(Player &player, float dt);
+	void chColision(Player &player);
 
 	void setTexture(sf::Texture &texture) { 
 		platform.setTexture(&texture); 

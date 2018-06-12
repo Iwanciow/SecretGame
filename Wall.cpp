@@ -23,8 +23,8 @@ bool Wall::colisionTop(sf::FloatRect rect)
 {
 	sf::Vector2f coordsPlayerBottomL(rect.left, rect.top + rect.height);
 	sf::Vector2f coordsPlayerBottomR(rect.left + rect.width, rect.top + rect.height);
-	sf::Vector2f platformTopL(platform.getGlobalBounds().left, platform.getGlobalBounds().top-1);
-	sf::Vector2f platformTopR(platform.getGlobalBounds().left + platform.getGlobalBounds().width, platform.getGlobalBounds().top-1);
+	sf::Vector2f platformTopL(platform.getGlobalBounds().left, platform.getGlobalBounds().top);
+	sf::Vector2f platformTopR(platform.getGlobalBounds().left + platform.getGlobalBounds().width, platform.getGlobalBounds().top);
 
 
 
@@ -54,8 +54,8 @@ bool Wall::colisionBottom(sf::FloatRect rect)
 {
 	sf::Vector2f coordsPlayerTopL(rect.left, rect.top);
 	sf::Vector2f coordsPlayerTopR(rect.left + rect.width, rect.top);
-	sf::Vector2f platformBottomL(platform.getGlobalBounds().left , platform.getGlobalBounds().top +platform.getGlobalBounds().height +1);
-	sf::Vector2f platformBottomR(platform.getGlobalBounds().left + platform.getGlobalBounds().width, platform.getGlobalBounds().top + platform.getGlobalBounds().height +1);
+	sf::Vector2f platformBottomL(platform.getGlobalBounds().left, platform.getGlobalBounds().top +platform.getGlobalBounds().height);
+	sf::Vector2f platformBottomR(platform.getGlobalBounds().left + platform.getGlobalBounds().width, platform.getGlobalBounds().top + platform.getGlobalBounds().height);
 
 
 
@@ -84,14 +84,14 @@ bool Wall::colision_l(sf::FloatRect rect)
 {
 	sf::Vector2f coordsPlayerBottomR(rect.left + rect.width, rect.top + rect.height);
 	sf::Vector2f coordsPlayerTopR(rect.left + rect.width, rect.top);
-	sf::Vector2f platformBottomL(platform.getGlobalBounds().left -1, platform.getGlobalBounds().top + platform.getGlobalBounds().height);
-	sf::Vector2f platformTopL(platform.getGlobalBounds().left - 1 , platform.getGlobalBounds().top);
+	sf::Vector2f platformBottomL(platform.getGlobalBounds().left -1 , platform.getGlobalBounds().top + platform.getGlobalBounds().height);
+	sf::Vector2f platformTopL(platform.getGlobalBounds().left  -1 , platform.getGlobalBounds().top);
 
 	if ((coordsPlayerTopR.y < platformBottomL.y && coordsPlayerTopR.y > platformTopL.y) ||
 		(coordsPlayerBottomR.y < platformBottomL.y && coordsPlayerBottomR.y > platformTopL.y))
 	{
 
-		if (coordsPlayerBottomR.x >= platformBottomL.x &&
+		if (coordsPlayerBottomR.x >= platformBottomL.x  &&
 			coordsPlayerBottomR.x <= platformBottomL.x + 5.f)
 		{
 			return true;
@@ -104,16 +104,16 @@ bool Wall::colision_l(sf::FloatRect rect)
 }
 bool Wall::colision_r(sf::FloatRect rect)
 {
-	sf::Vector2f coordsPlayerBottomL(rect.left , rect.top + rect.height);
-	sf::Vector2f coordsPlayerTopL(rect.left , rect.top);
+	sf::Vector2f coordsPlayerBottomL(rect.left, rect.top + rect.height);
+	sf::Vector2f coordsPlayerTopL(rect.left, rect.top);
 	sf::Vector2f platformBottomR(platform.getGlobalBounds().left + platform.getGlobalBounds().width + 1, platform.getGlobalBounds().top + platform.getGlobalBounds().height);
-	sf::Vector2f platformTopR(platform.getGlobalBounds().left + platform.getGlobalBounds().width + 1 , platform.getGlobalBounds().top);
-	
+	sf::Vector2f platformTopR(platform.getGlobalBounds().left + platform.getGlobalBounds().width + 1, platform.getGlobalBounds().top);
+
 	if ((coordsPlayerTopL.y < platformBottomR.y && coordsPlayerTopL.y > platformTopR.y) ||
 		(coordsPlayerBottomL.y < platformBottomR.y && coordsPlayerBottomL.y > platformTopR.y))
 	{
 
-		if (coordsPlayerBottomL.x <= platformBottomR.x && 
+		if (coordsPlayerBottomL.x <= platformBottomR.x  &&
 			coordsPlayerBottomL.x >= platformBottomR.x - 5.f)
 		{
 			return true;
@@ -123,46 +123,42 @@ bool Wall::colision_r(sf::FloatRect rect)
 	return false;
 }
 // Sprawdzanie kolizji elo
-void Wall::chColision(Player & player, float dt)
+void Wall::chColision(Player & player)
 {
 	
 	if (colisionTop(player.shape.getGlobalBounds()))
 	{
-		std::cout << "ELO ELO TOP KOLIZJA \n";
 		if (player.speed.y > 0.0f)
 		{
 
-			
-			player.speed.y = 0.f * dt ;
+
+			player.speed.y = 0.f;
 		}
 
 	}
 	else if (colisionBottom(player.shape.getGlobalBounds()))
 	{
-		std::cout << "WITAM TU KOLIZJA DOLNA\n";
 		if (player.speed.y < 0.0f)
 		{
 
 
-			player.speed.y = 0.f * dt;
+			player.speed.y = 0.f;
 		}
 	}
 
 	if (colision_l(player.shape.getGlobalBounds()))
 	{
-		std::cout << "Kurwa nie wiem co sie dzieje lewa\n";
 		if (player.speed.x > 0.0F)
 		{
-			player.speed.x = -2.f * dt;
+			player.speed.x = -1.0f;
 		}
 
 	}
 	else if (colision_r(player.shape.getGlobalBounds()))
 	{
-		std::cout << "Smutno prawo\n";
 		if (player.speed.x < 0.0F)
 		{
-			player.speed.x = 2.f *dt;
+			player.speed.x = +1.0f;
 		}
 	}
 

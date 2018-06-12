@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "Game.h"
+
 #include <Windows.h>
 
 
 Game::Game():window(sf::VideoMode(RESOLUTION_X, RESOLUTION_Y), WIN_NAME, sf::Style::Close | sf::Style::Titlebar)
 {
-	GameRuning = true;
+	
+
+	window.setFramerateLimit(60);
 	playertext.loadFromFile("player.png");
 	player.shape.setTexture(&playertext);
 	bg.loadFromFile("could.png");
@@ -13,16 +16,16 @@ Game::Game():window(sf::VideoMode(RESOLUTION_X, RESOLUTION_Y), WIN_NAME, sf::Sty
 	pl.loadFromFile("platform.png");
 	
 	
-	platforms.push_back(Wall({ -10,RESOLUTION_Y-2 }, { RESOLUTION_X+10,30 }, pl));	//platforma dol
-	//platforms.push_back(Wall({ -10,0 }, { 10, RESOLUTION_Y },pl)); //platforma lewo
-	//platforms.push_back(Wall({ RESOLUTION_X,0} , { 10,RESOLUTION_Y },pl));	//platforma prawo
-	platforms.push_back(Wall({ 350,400 }, { 100,60 },pl));
-	platforms.push_back(Wall({ 200,100 }, { 100,60 },pl));
-	platforms.push_back(Wall({ 200,300 }, { 100,60 },pl));
 	
+	platforms.push_back(Wall({ -10,RESOLUTION_Y-2 }, { RESOLUTION_X+10,30 }, pl));	//platforma dol
+	platforms.push_back(Wall({ -10,0 }, { 10, RESOLUTION_Y },pl)); //platforma lewo
+	platforms.push_back(Wall({ RESOLUTION_X,0} , { 10,RESOLUTION_Y },pl));	//platforma prawo
+	platforms.push_back(Wall({ 250,645 }, { 90,40 },pl));
+	platforms.push_back(Wall({ 400,560}, { 90,40 },pl));
+	platforms.push_back(Wall({ 550,525}, { 90,40 }, pl));
 	
 	background.setSize(sf::Vector2f(RESOLUTION_X, RESOLUTION_Y));
-	
+	menu.state = 0;
 	
 }
 
@@ -31,17 +34,33 @@ Game::~Game()
 {
 }
 
-void Game::RenderThread() {
-	window.setFramerateLimit(60);
-	
-	while (window.isOpen())
-	{
-	
-		
-		Draw();
-	}
+void Game::Display() {
 
+	while (window.isOpen()) {
+
+		if (menu.state == 0) {
+
+			MenuUpdate();
+			DrawMenu();
+		}
+
+
+		if (menu.state == 1) {
+
+
+			PollEvent();
+			Update();
+			Draw();
+		}
+
+		if (menu.state == 2) {
+
+
+		}
+
+	}
 }
+
 
 void Game::PollEvent() {
 
@@ -53,17 +72,11 @@ void Game::PollEvent() {
 
 		//closed window
 		if (event.type == sf::Event::Closed)
-		{
-			GameRuning = false;
 			window.close();
-			
-		}
 		//closed window ESC
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-		{
-			GameRuning = false;
-			window.close();
-		}
+			menu.state = 0;
+
 
 		//show position
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::RShift)
@@ -85,8 +98,12 @@ void Game::PollEvent() {
 		{
 		case sf::Keyboard::Space: //jump
 		{
-			player.speed += {0.f, -200.f * dt};
-			Jump = true;
+			player.speed += {0.f, -10.f};
+			if (player.speed.y < -10.f)
+			{
+				player.speed.y = -10.f;
+			}
+			jump = true;
 			break;
 		}
 		case sf::Keyboard::Return: //reset position
@@ -99,6 +116,7 @@ void Game::PollEvent() {
 	}
 	}
 
+
 }
 
 
@@ -107,85 +125,115 @@ void Game::Update()
 	bool moving = false;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && player.shape.getPosition().x > 0 )
 	{
-		player.speed += {-10.f *dt, 0.f};
-		if (player.speed.x < -1000.f*dt)
+		player.speed += {-0.95f, 0.f};
+		if (player.speed.x < -10.f)
 		{
-			player.speed.x = -1000.f *dt;
+			player.speed.x = -10.f;
 		}
 		moving = true;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && player.shape.getPosition().x + player.shape.getSize().x < window.getSize().x)
 	{
-		player.speed.x += 10.0f * dt;
+		player.speed += {0.95f, 0.f};
 		
-		if (player.speed.x > 1000.f*dt)
+		if (player.speed.x > 10.f)
 		{
-			player.speed.x = 1000.f*dt;
+			player.speed.x = 10.f;
 		}
 		moving = true;
 	}
 
 	if (!moving) {
-		if (player.speed.x < -1*dt)
-			player.speed.x += 1.0f * dt;
-		else if (player.speed.x > 1*dt)
-			player.speed.x -= 1.f * dt;
+		if (player.speed.x < -1)
+			player.speed.x += 1.0f;
+		else if (player.speed.x > 1)
+			player.speed.x -= 1.f;
 		else
-			player.speed.x = 0.f *dt;
+			player.speed.x = 0.f;
 		moving = false;
 	}
 	/*######################################################
 	
-						GRAWITACJA
+						Gravitation
 	
 	########################################################*/
-		player.speed.y += 0.50f *dt;
+		player.speed += {0.f, 0.5f};
 		
-		if (player.speed.y > 200.f *dt)
+		if (player.speed.y > 10.f)
 		{
-			player.speed.y = 200.f * dt;
+			player.speed.y = 10.f;
 		}
-
-		else if (player.speed.y < -200.f *dt)
-		{
-			player.speed.y = -200.f*dt;
-		}
-
 	
 	
 	//iterator do vektora
 	for (auto iter = platforms.begin(); iter != platforms.end(); iter++) {
-		iter->chColision(player,dt);
+		iter->chColision(player);
 	}
 
+	
 
 	player.shape.move(player.speed);
 
 }
 
-void Game::UpdateThread()
+void Game::MenuUpdate()
 {
-	
-	while (GameRuning)
+	sf::Event EventMenu;
+	while (window.pollEvent(EventMenu))
 	{
-		dt = clk.restart().asSeconds();
+		if (EventMenu.type == sf::Event::KeyPressed && EventMenu.key.code == sf::Keyboard::Escape)
+		{
+			window.close();
+		}
 
-		PollEvent();
-		Update();
-		
+		if (EventMenu.type == sf::Event::Closed)
+			window.close();
+
+		switch (EventMenu.type)
+		{
+		case sf::Event::KeyReleased: {
+			switch (EventMenu.key.code)
+			{
+			case sf::Keyboard::W:
+			{
+				std::cout << "W is pressed\n";
+				menu.Up();
+				break;
+			}
+			case sf::Keyboard::S:
+			{
+				std::cout << "S is pressed\n";
+				menu.Down();
+				break;
+			}
+			case sf::Keyboard::Return:
+				std::cout << "Enter is pressed\n";
+				switch (menu.GetPressedItem())
+				{
+				case 0:
+				{
+
+					menu.state = 1;
+					break;
+				}
+				case 1:
+				{
+					menu.state = 2;
+					break;
+				}
+				case 2:
+				{
+					window.close();
+					break;
+				}
+					break;
+				}
+				break;
+			}
+			break;
+		}
+		}
 	}
-}
-
-void Game::Run()
-{
-	window.setActive(false);
-	std::thread renderthread(&Game::RenderThread, this);
-
-	UpdateThread();
-	
-	renderthread.join();
-	this->window.close();
-
 }
 
 void Game::Draw() {
@@ -202,3 +250,13 @@ void Game::Draw() {
 	window.display();
 
 }
+
+void Game::DrawMenu()
+{
+	window.clear(sf::Color::White);
+	menu.draw(window);
+
+	window.display();
+
+}
+
