@@ -1,7 +1,0 @@
-﻿  TestSFML.cpp
-c:\users\mikołaj\desktop\giereczkatest\testsfml.cpp(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
-  Player.cpp
-c:\users\mikołaj\desktop\giereczkatest\player.h(5): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML\Graphics.hpp': No such file or directory
-  Game.cpp
-c:\users\mikołaj\desktop\giereczkatest\game.h(4): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
-  Generowanie kodu...
