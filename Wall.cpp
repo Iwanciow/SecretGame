@@ -92,7 +92,7 @@ bool Wall::colision_l(sf::FloatRect rect)
 	{
 
 		if (coordsPlayerBottomR.x >= platformBottomL.x  &&
-			coordsPlayerBottomR.x <= platformBottomL.x + 10.f)
+			coordsPlayerBottomR.x <= platformBottomL.x + 5.f)
 		{
 			return true;
 		}
@@ -114,7 +114,7 @@ bool Wall::colision_r(sf::FloatRect rect)
 	{
 
 		if (coordsPlayerBottomL.x <= platformBottomR.x  &&
-			coordsPlayerBottomL.x >= platformBottomR.x - 10.f)
+			coordsPlayerBottomL.x >= platformBottomR.x - 5.f)
 		{
 			return true;
 		}
@@ -150,7 +150,7 @@ void Wall::chColision(Player & player)
 	{
 		if (player.speed.x > 0.0F)
 		{
-			player.speed.x = -1.0f;
+			player.speed.x = -1.f;
 		}
 
 	}
@@ -158,7 +158,7 @@ void Wall::chColision(Player & player)
 	{
 		if (player.speed.x < 0.0F)
 		{
-			player.speed.x = +1.0f;
+			player.speed.x = 1.f;
 		}
 	}
 

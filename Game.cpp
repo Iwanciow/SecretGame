@@ -24,7 +24,7 @@ Game::Game():window(sf::VideoMode(RESOLUTION_X, RESOLUTION_Y), WIN_NAME, sf::Sty
 	platforms.push_back(Wall({ 400,565 }, { 90,45 },pl));
 	platforms.push_back(Wall({ 550,535 }, { 90,45 },pl));
 	platforms.push_back(Wall({ 650,470 }, { 110,45 },pl));
-	platforms.push_back(Wall({ 450,390 }, { 90,40 }, pl));
+	platforms.push_back(Wall({ 450,400 }, { 90,40 }, pl));
 	
 	background.setSize(sf::Vector2f(RESOLUTION_X, RESOLUTION_Y));
 	menu.state = 0;
@@ -100,12 +100,15 @@ void Game::PollEvent() {
 		{
 		case sf::Keyboard::Space: //jump
 		{
-			player.speed += {0.f, -10.f};
-			if (player.speed.y < -10.f)
+			if (player.speed.y == 0)
 			{
-				player.speed.y = -10.f;
+				player.speed += {0.f, -9.f};
+				if (player.speed.y < -9.f)
+				{
+					player.speed.y = -9.f;
+				}
+				jump = true;
 			}
-			jump = true;
 			break;
 		}
 		case sf::Keyboard::Return: //reset position
@@ -128,9 +131,9 @@ void Game::Update()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && player.shape.getPosition().x > 0 )
 	{
 		player.speed += {-0.95f, 0.f};
-		if (player.speed.x < -10.f)
+		if (player.speed.x < -6.f)
 		{
-			player.speed.x = -10.f;
+			player.speed.x = -6.f;
 		}
 		moving = true;
 	}
@@ -138,9 +141,9 @@ void Game::Update()
 	{
 		player.speed += {0.95f, 0.f};
 		
-		if (player.speed.x > 10.f)
+		if (player.speed.x > 6.f)
 		{
-			player.speed.x = 10.f;
+			player.speed.x = 6.f;
 		}
 		moving = true;
 	}
