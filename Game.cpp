@@ -17,12 +17,14 @@ Game::Game():window(sf::VideoMode(RESOLUTION_X, RESOLUTION_Y), WIN_NAME, sf::Sty
 	
 	
 	
-	platforms.push_back(Wall({ -10,RESOLUTION_Y-2 }, { RESOLUTION_X+10,30 }, pl));	//platforma dol
+	platforms.push_back(Wall({ -10,RESOLUTION_Y-20 }, { RESOLUTION_X+10,30 }, pl));	//platforma dol
 	platforms.push_back(Wall({ -10,0 }, { 10, RESOLUTION_Y },pl)); //platforma lewo
 	platforms.push_back(Wall({ RESOLUTION_X,0} , { 10,RESOLUTION_Y },pl));	//platforma prawo
-	platforms.push_back(Wall({ 250,645 }, { 90,40 },pl));
-	platforms.push_back(Wall({ 400,560}, { 90,40 },pl));
-	platforms.push_back(Wall({ 550,525}, { 90,40 }, pl));
+	platforms.push_back(Wall({ 250,625 }, { 90,45 },pl));
+	platforms.push_back(Wall({ 400,565 }, { 90,45 },pl));
+	platforms.push_back(Wall({ 550,535 }, { 90,45 },pl));
+	platforms.push_back(Wall({ 650,470 }, { 110,45 },pl));
+	platforms.push_back(Wall({ 450,390 }, { 90,40 }, pl));
 	
 	background.setSize(sf::Vector2f(RESOLUTION_X, RESOLUTION_Y));
 	menu.state = 0;
@@ -218,7 +220,7 @@ void Game::MenuUpdate()
 				}
 				case 1:
 				{
-					menu.state = 2;
+					menu.state = 0;
 					break;
 				}
 				case 2:
